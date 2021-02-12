@@ -13,6 +13,7 @@ Widget createHomeScreen() => ChangeNotifierProvider<Favorites>(
     );
 
 void main() {
+  //Different test groups for each widget
   group('Home Page Widget Tests', () {
     testWidgets('Testing Scrolling', (tester) async {
       await tester.pumpWidget(createHomeScreen());
@@ -21,5 +22,18 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Item 0'), findsNothing);
     });
+  });
+
+  testWidgets('Testing IconButtons', (tester) async {
+    await tester.pumpWidget(createHomeScreen());
+    expect(find.byIcon(Icons.favorite), findsNothing);
+    await tester.tap(find.byIcon(Icons.favorite_border).first);
+    await tester.pumpAndSettle(Duration(seconds: 1));
+    expect(find.text('Added to favorites.'), findsOneWidget);
+    expect(find.byIcon(Icons.favorite), findsWidgets);
+    await tester.tap(find.byIcon(Icons.favorite).first);
+    await tester.pumpAndSettle(Duration(seconds: 1));
+    expect(find.text('Removed from favorites.'), findsOneWidget);
+    expect(find.byIcon(Icons.favorite), findsNothing);
   });
 }
